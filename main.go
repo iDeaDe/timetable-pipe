@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/ideade/timetable-pipe/cache"
 	"github.com/ideade/timetable-pipe/server"
 	"github.com/ideade/timetable-pipe/timetable"
@@ -20,6 +21,10 @@ func getLogger() *log.Logger {
 }
 
 func main() {
+	var address string
+	flag.StringVar(&address, "address", "127.0.0.1:9000", "Server address")
+	flag.Parse()
+
 	logger := getLogger()
 
 	logger.Println("Initialization of the timetable parser")
@@ -40,7 +45,7 @@ func main() {
 
 	logger.Println("Initialization of the fastcgi server")
 	srv := new(server.Server)
-	srv.Address = "127.0.0.1:9000"
+	srv.Address = address
 
 	logger.Println("Registering handlers")
 	handlers := map[string]http.HandlerFunc{

@@ -3,6 +3,7 @@ package server
 import (
 	"net"
 	"net/http"
+	"net/http/fcgi"
 )
 
 type Server struct {
@@ -21,7 +22,7 @@ func (s *Server) Run(errCh chan error, handlers map[string]http.HandlerFunc) {
 	handler.Handlers = handlers
 
 	getLogger().Printf("Starting on %s\n", s.Address)
-	if err = http.Serve(listener, handler); err != nil {
+	if err = fcgi.Serve(listener, handler); err != nil {
 		errCh <- err
 		return
 	}
