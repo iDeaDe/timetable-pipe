@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func getLogger() *log.Logger {
@@ -22,7 +23,11 @@ func getLogger() *log.Logger {
 
 func main() {
 	var address string
+	var basePath string
+
 	flag.StringVar(&address, "address", "127.0.0.1:9000", "Server address")
+	flag.StringVar(&basePath, "basePath", "/api", "Base api address")
+
 	flag.Parse()
 
 	logger := getLogger()
@@ -49,8 +54,8 @@ func main() {
 
 	logger.Println("Registering handlers")
 	handlers := map[string]http.HandlerFunc{
-		"/api/groups":    gHandler.ServeHTTP,
-		"/api/timetable": tHandler.ServeHTTP,
+		strings.Join([]string{basePath, "groups"}, "/"):    gHandler.ServeHTTP,
+		strings.Join([]string{basePath, "timetable"}, "/"): tHandler.ServeHTTP,
 	}
 
 	logger.Println("Starting the fcgi-server")
